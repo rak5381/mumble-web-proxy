@@ -1,6 +1,4 @@
-FROM rust:1.48-alpine AS build
-
-ARG REV=master
+FROM rust:1.64-alpine AS build
 
 RUN apk add --no-cache \
     clang-libs \
@@ -10,8 +8,8 @@ RUN apk add --no-cache \
     openssl-dev \
     ;
 WORKDIR /src
-RUN curl https://codeload.github.com/Johni0702/mumble-web-proxy/tar.gz/$REV \
-    | tar -xzf - --strip-components 1
+COPY Cargo.toml Cargo.lock ./
+COPY src ./src
 RUN echo -e '\n[dependencies."async-trait"]\ndefault-features = false' >> Cargo.toml
 RUN RUSTFLAGS="-C target-feature=-crt-static" cargo install --path .
 
@@ -23,7 +21,7 @@ RUN apk add --no-cache \
     libnice \
     ;
 COPY --from=build /usr/local/cargo/bin/mumble-web-proxy /mumble-web-proxy
-COPY entrypoint.sh /entrypoint.sh
+COPY docker/entrypoint.sh /entrypoint.sh
 
 ENV MWP_LISTEN_WS=64737
 ENV MWP_SERVER=mumble-server:64738
