@@ -62,7 +62,7 @@ impl Default for Config {
     }
 }
 
-fn create_argparser(config: &mut Config) -> ArgumentParser {
+fn create_argparser(config: &mut Config) -> ArgumentParser<'_> {
     let mut ap = ArgumentParser::new();
     ap.set_description("Run the Mumble-WebRTC proxy");
     ap.refer(&mut config.file).add_option(

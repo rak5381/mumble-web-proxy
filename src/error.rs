@@ -2,6 +2,7 @@ use futures::channel::mpsc;
 
 // FIXME clean this up
 
+#[allow(dead_code)]
 #[derive(Debug)]
 pub enum Error {
     Io(std::io::Error),
